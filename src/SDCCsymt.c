@@ -515,54 +515,29 @@ addDecl (symbol * sym, int type, sym_link * p)
       DCL_TYPE (head) = type;
     }
 
-  /* no type yet: make p the type */
+  /* if this is the first entry   */
   if (!sym->type)
     {
       sym->type = head;
       sym->etype = tail;
     }
-  /* type ends in spec, p is single spec element: merge specs */
   else if (IS_SPEC (sym->etype) && IS_SPEC (head) && head == tail)
     {
       sym->etype = mergeSpec (sym->etype, head, sym->name);
     }
-  /* type ends in spec, p is single decl element: p goes before spec */
   else if (IS_SPEC (sym->etype) && !IS_SPEC (head) && head == tail)
     {
       t = sym->type;
-      while (t->next != sym->etype) // XXX - crash for a single-element type?
+      while (t->next != sym->etype)
         t = t->next;
       t->next = head;
       tail->next = sym->etype;
     }
-  /* XXX - to be understood */
   else if (IS_FUNC (sym->type) && IS_SPEC (sym->type->next) && !memcmp (sym->type->next, empty, sizeof (sym_link)))
     {
       sym->type->next = head;
       sym->etype = tail;
     }
-  /* type ends in spec, p ends in spec: merge specs, p's decls go before spec */
-  else if (IS_SPEC (sym->etype) && IS_SPEC (tail))
-    {
-      sym->etype = mergeSpec (sym->etype, tail, sym->name);
-
-      // cut off p's spec
-      t = head;
-      while (t->next != tail) {
-          assert(!IS_SPEC (t)); // we expect decls only (XXX - should we?)
-          t = t->next;
-      }
-      tail = t;
-      tail->next = NULL;
-
-      // splice p's decls
-      t = sym->type;
-      while (t->next != sym->etype) // XXX - crash for a single-element type?
-          t = t->next;
-      t->next = head;
-      tail->next = sym->etype;
-    }
-  /* append p to the type */
   else
     {
       sym->etype->next = head;
@@ -4439,7 +4414,7 @@ initCSupport (void)
               dbuf_init (&dbuf, 128);
               dbuf_printf (&dbuf, "_%s%s%s", srlrr[slsr], ssu[su * 3], sbwd[bwd]);
               rlrr[slsr][bwd][su] = sym =
-                funcOfTypeVarg (_mangleFunctionName (dbuf_c_str (&dbuf)),
+                funcOfTypeVarg (_mangleFunctionName (dbuf_c_str (&dbuf)), 
                                 sbwdCodes[bwd + 4*su], 2, &params[0]);
               FUNC_ISREENT (sym->type) = options.intlong_rent ? 1 : 0;
               FUNC_NONBANKED (sym->type) = 1;

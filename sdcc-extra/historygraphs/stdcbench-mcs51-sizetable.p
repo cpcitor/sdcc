@@ -10,7 +10,7 @@ set label "3.7.0" at 10233, 13805
 set arrow from 10582, 13480 to 10582, 13380
 set label "3.8.0" at 10582, 13480
 set arrow from 11214, 14064 to 11214, 13964
-set label "3.9.0" at 11214, 14064
+set label "3.9.0" at 10582, 14064
 set arrow from 11533, 14080 to 11533, 13980
 set label "4.0.0" at 11533, 14080
 set arrow from 12085, 14089 to 12085, 13989

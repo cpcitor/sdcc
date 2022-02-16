@@ -3,10 +3,6 @@ set terminal svg size 640,480
 set style data lines
 set xlabel "revision"
 set ylabel "size [B]"
-set arrow from 9256, 21700 to 9256, 21200
-set label "3.5.0" at 9256, 21700
-set arrow from 9618, 21578 to 9618, 21078
-set label "3.6.0" at 9618, 21578
 set arrow from 10582, 20554 to 10582, 20054
 set label "3.8.0" at 10582, 20554
 set arrow from 11214, 20836 to 11214, 20326
